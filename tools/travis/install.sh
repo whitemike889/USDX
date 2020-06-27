@@ -43,7 +43,7 @@ EOF
     sudo apt-get install elfutils
     if ! sudo apt-get install flatpak flatpak-builder ; then
         sudo apt-get install fakeroot
-        for i in ostree xdg-desktop-portal flatpak flatpak-builder ; do
+        for i in ostree flatpak xdg-desktop-portal flatpak-builder ; do
             date +"%c building $i"
             mkdir build
             # Travis will kill the build both if it generates too much
@@ -66,6 +66,9 @@ EOF
                 export DEB_BUILD_OPTIONS=nocheck
                 apt-get source --compile $i
                 rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
+		# flatpak depends on xdg-desktop-portal, which needs libflatpak-dev to build
+		[ $i != flatpak ] || mv flatpak_*.deb ..
+		[ $i != xdg-desktop-portal ] || mv ../flatpak_*.deb .
                 sudo dpkg -i *.deb
             ) > build.log 2>&1 ; then
                 kill $bgtask
