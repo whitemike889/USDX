@@ -46,6 +46,19 @@ EOF
         for i in ostree flatpak flatpak-builder ; do
             date +"%c building $i"
             mkdir build
+            # Travis will kill the build both if it generates too much
+            # output (> 4MB) and no output at all (for 10 minutes).
+            # So let's generate a little bit of output as long as the
+            # build proceeds.
+            logsize=0
+            while sleep 60 ; do
+                newlogsize=`stat -c %s build/build.log`
+                if [ $logsize -ne $newlogsize ] ; then
+                    logsize=$newlogsize
+                    date +"%c build log size: $logsize"
+                fi
+            done &
+            bgtask=$!
             if ! (
                 set -e
                 cd  build
@@ -54,9 +67,11 @@ EOF
                 rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
                 sudo dpkg -i *.deb
             ) > build.log 2>&1 ; then
+                kill $bgtask
                 tail -n 10000 build.log
                 exit 1
             fi
+            kill $bgtask
             rm -fR build
             date +"%c done building $i"
         done
