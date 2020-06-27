@@ -52,7 +52,7 @@ EOF
             # build proceeds.
             logsize=0
             while sleep 60 ; do
-                newlogsize=`stat -c %s build/build.log`
+                newlogsize=`stat -c %s build.log`
                 if [ $logsize -ne $newlogsize ] ; then
                     logsize=$newlogsize
                     date +"%c build log size: $logsize"
@@ -61,14 +61,15 @@ EOF
             bgtask=$!
             if ! (
                 set -e
-                cd  build
+                cd build
                 sudo apt-get build-dep $i
+                export DEB_BUILD_OPTIONS=nocheck
                 apt-get source --compile $i
                 rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
                 sudo dpkg -i *.deb
             ) > build.log 2>&1 ; then
                 kill $bgtask
-                tail -n 10000 build.log
+                tac build.log
                 exit 1
             fi
             kill $bgtask
