@@ -40,7 +40,19 @@ Package: flatpak-builder
 Pin: version 0.*
 Pin-Priority: -1
 EOF
-    sudo apt-get install flatpak flatpak-builder elfutils
+    sudo apt-get install elfutils
+    if ! sudo apt-get install flatpak flatpak-builder ; then
+        for i in ostree flatpak flatpak-builder ; do
+            mkdir build
+            pushd build
+            sudo apt-get build-dep $i
+            apt-get source --compile $i
+            rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
+            sudo dpkg -i *.deb
+            popd
+            rm -fR build
+        done
+    fi
     case "$TRAVIS_CPU_ARCH" in
     amd64)
         if [ "$BUILD_32BIT" = yes ] ; then
