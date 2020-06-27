@@ -4,29 +4,9 @@ language: generic
 matrix:
   include:
     - os: linux
-      env: LAZ_VER=1.6 LAZ_ENV=wine WINEARCH=win32 LAZ_OPT="--os=win32 --cpu=i386"
-      dist: trusty
-    - os: linux
-      env: VARIANT=flatpak
-      dist: bionic
-    - os: linux
-      env: VARIANT=flatpak
-      dist: bionic
-      arch: arm64
-    - os: linux
-      env: VARIANT=flatpak BUILD_32BIT=yes
-      dist: bionic
-    - os: linux
-      env: VARIANT=flatpak BUILD_32BIT=yes
-      dist: bionic
-      arch: arm64
-    - os: linux
       env: VARIANT=flatpak
       dist: bionic
       arch: ppc64le
-    - os: linux
-      dist: trusty
-    - os: osx
 
 env:
   global:
