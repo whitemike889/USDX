@@ -40,7 +40,7 @@ Package: flatpak-builder
 Pin: version 0.*
 Pin-Priority: -1
 EOF
-    sudo apt-get install elfutils
+    sudo apt-get install elfutils unzip
     if ! sudo apt-get install flatpak flatpak-builder ; then
         sudo apt-get install fakeroot bubblewrap dbus-user-session
         for i in ostree flatpak xdg-desktop-portal flatpak-builder ; do
