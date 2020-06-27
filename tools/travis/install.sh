@@ -44,12 +44,14 @@ EOF
     if ! sudo apt-get install flatpak flatpak-builder ; then
         for i in ostree flatpak flatpak-builder ; do
             mkdir build
-            pushd build
-            sudo apt-get build-dep $i
-            apt-get source --compile $i
-            rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
-            sudo dpkg -i *.deb
-            popd
+            (
+                set -e
+                cd  build
+                sudo apt-get build-dep $i
+                apt-get source --compile $i
+                rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
+                sudo dpkg -i *.deb
+            )
             rm -fR build
         done
     fi
