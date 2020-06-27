@@ -43,7 +43,7 @@ EOF
     sudo apt-get install elfutils
     if ! sudo apt-get install flatpak flatpak-builder ; then
         sudo apt-get install fakeroot
-        for i in ostree flatpak flatpak-builder ; do
+        for i in ostree xdg-desktop-portal flatpak flatpak-builder ; do
             date +"%c building $i"
             mkdir build
             # Travis will kill the build both if it generates too much
