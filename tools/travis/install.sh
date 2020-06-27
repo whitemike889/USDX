@@ -44,16 +44,21 @@ EOF
     if ! sudo apt-get install flatpak flatpak-builder ; then
         sudo apt-get install fakeroot
         for i in ostree flatpak flatpak-builder ; do
+            date +"%c building $i"
             mkdir build
-            (
+            if ! (
                 set -e
                 cd  build
                 sudo apt-get build-dep $i
                 apt-get source --compile $i
                 rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
                 sudo dpkg -i *.deb
-            )
+            ) > build.log 2>&1 then
+                tail -n 10000 build.log
+                exit 1
+            fi
             rm -fR build
+            date +"%c done building $i"
         done
     fi
     case "$TRAVIS_CPU_ARCH" in
