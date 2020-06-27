@@ -53,7 +53,7 @@ EOF
                 apt-get source --compile $i
                 rm -f *-dbgsym_*.deb *-doc_*.deb *-tests*.deb
                 sudo dpkg -i *.deb
-            ) > build.log 2>&1 then
+            ) > build.log 2>&1 ; then
                 tail -n 10000 build.log
                 exit 1
             fi
