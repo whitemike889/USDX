@@ -42,6 +42,7 @@ Pin-Priority: -1
 EOF
     sudo apt-get install elfutils
     if ! sudo apt-get install flatpak flatpak-builder ; then
+        sudo apt-get install fakeroot
         for i in ostree flatpak flatpak-builder ; do
             mkdir build
             (
