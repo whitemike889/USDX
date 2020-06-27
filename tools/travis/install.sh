@@ -42,7 +42,7 @@ Pin-Priority: -1
 EOF
     sudo apt-get install elfutils
     if ! sudo apt-get install flatpak flatpak-builder ; then
-        sudo apt-get install fakeroot
+        sudo apt-get install fakeroot bubblewrap dbus-user-session
         for i in ostree flatpak xdg-desktop-portal flatpak-builder ; do
             date +"%c building $i"
             mkdir build
@@ -51,7 +51,7 @@ EOF
             # So let's generate a little bit of output as long as the
             # build proceeds.
             logsize=0
-            while sleep 60 ; do
+            while sleep 20 ; do
                 newlogsize=`stat -c %s build.log`
                 if [ $logsize -ne $newlogsize ] ; then
                     logsize=$newlogsize
